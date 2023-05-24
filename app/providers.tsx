@@ -1,22 +1,26 @@
 "use client";
 
-import EditorProvider from "@/context/editorcontext";
+import EditorProvider from "@/context/editorContext";
 import RunProvider from "@/context/runContext";
+import { StorageProvider } from "@/context/storageContext";
 import { TerminalProvider } from "@/context/terminalContext";
 import { ReactNode, useEffect } from "react";
 
 const Providers = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
-    window.addEventListener("beforeunload", (event) => {
-      event.preventDefault();
-      event.returnValue = "";
-    });
+    process.env.NODE_ENV === "production" &&
+      window.addEventListener("beforeunload", (event) => {
+        event.preventDefault();
+        event.returnValue = "";
+      });
   });
   return (
     <TerminalProvider>
-      <EditorProvider>
-        <RunProvider>{children}</RunProvider>
-      </EditorProvider>
+      <StorageProvider>
+        <EditorProvider>
+          <RunProvider>{children}</RunProvider>
+        </EditorProvider>
+      </StorageProvider>
     </TerminalProvider>
   );
 };

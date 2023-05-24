@@ -39,12 +39,11 @@ export default function Terminal() {
       disableStdin: false,
       cursorBlink: true,
       fontFamily: "D2Coding Ligature",
-      theme: {
-        background: "#000000",
-        foreground: "#ffffff",
-        cursor: "#ffffff",
-      },
-      rendererType: "canvas",
+      // theme: {
+      //   background: "#000000",
+      //   foreground: "#ffffff",
+      //   cursor: "#ffffff",
+      // },
     }) as _Terminal;
 
     termRef.current.loadAddon(fitAddon);
@@ -132,5 +131,9 @@ export default function Terminal() {
     }
   }, [termDivRef]);
 
-  return <div ref={termDivRef} className="max-h-full h-full mt-2"></div>;
+  return (
+    <div className="h-full py-2">
+      <div ref={termDivRef} className="h-full"></div>
+    </div>
+  );
 }

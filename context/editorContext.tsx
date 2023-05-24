@@ -44,9 +44,7 @@ export default function EditorProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [theme, setTheme] = React.useState<string>(
-    themePrefix + (localStorage.getItem("dark") === "true" ? "dark" : "light")
-  );
+  const [theme, setTheme] = React.useState<string>(themePrefix + "dark");
 
   const monacoRef = React.useRef<Monaco | null>(null);
   const changeFileListenerRef = React.useRef<OnFileChangeListener[]>([]);

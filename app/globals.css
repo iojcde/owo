@@ -2,9 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base { 
+  .font-display { 
+    font-variation-settings:"opsz" 32;
+  }
+
+  :root {
+    --radius: 0.5rem;
+  }
+}
+
 .xterm {
   padding: 16px !important;
-  @apply rounded-l-[12px] shadow border border-r-0 overflow-hidden;
+  @apply rounded-l-[12px] shadow border border-r-0 overflow-hidden h-full;
 } 
 
 .xterm-viewport.xterm-viewport {
@@ -22,7 +32,7 @@
 }
 
 body{
-  @apply text-gray-12 bg-gray-1;
+  @apply text-gray-12 bg-gray-1 h-screen;
 }
 
 *{

@@ -1,4 +1,4 @@
-import { createContext } from "react";
+import { createContext, useContext } from "react";
 
 export interface StorageContext {
   getRevisions: () => string[];
@@ -12,7 +12,7 @@ const Context = createContext<StorageContext>({
   getRevision: () => "",
 });
 
-const getRevisions = async () => {
+const getRevisions = (): string[] => {
   const revisions = localStorage.getItem("revisions");
   if (revisions) {
     return JSON.parse(revisions);
@@ -21,19 +21,31 @@ const getRevisions = async () => {
   }
 };
 
-const save = async (content: string) => {
-  localStorage.setItem(
-    "revisions",
-    JSON.stringify([
-      ...JSON.parse(localStorage.getItem("revisions") ?? "[]"),
-      new Date().toISOString(),
-    ])
+const save = (content: string) => {
+  console.log("saving");
+  const old = JSON.parse(localStorage.getItem("revisions") ?? "[]");
+  const time = new Date();
+  const revisions: string[] = JSON.parse(
+    localStorage.getItem("revisions") ?? "[]"
   );
-  localStorage.setItem(`content${new Date().toISOString()}`, content);
+
+  if (
+    time.getTime() - new Date(revisions[0]).getTime() > 60 * 1000 * 10 ||
+    revisions.length === 0
+  ) {
+    //larger than 10 minutes
+    localStorage.setItem(
+      "revisions",
+      JSON.stringify([time.toISOString(), ...old])
+    );
+    localStorage.setItem(`content${time.toISOString()}`, content);
+  } else {
+    localStorage.setItem(`content${revisions[0]}`, content);
+  }
 };
 
-const getRevision = async (revision: string) => {
-  return localStorage.getItem(`content${revision}`);
+const getRevision = (revision: string): string => {
+  return localStorage.getItem(`content${revision}`) ?? "";
 };
 
 const value = {
@@ -41,6 +53,13 @@ const value = {
   save,
   getRevision,
 };
+
 const StorageProvider = ({ children }: { children: React.ReactNode }) => {
   return <Context.Provider value={value}>{children}</Context.Provider>;
 };
+
+const useStorageContext = () => {
+  return useContext(Context);
+};
+
+export { StorageProvider, useStorageContext };

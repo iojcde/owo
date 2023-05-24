@@ -6,13 +6,12 @@ import {
   useRef,
   useState,
 } from "react";
-import { useKeyPress } from "react-use";
 import debounce from "just-debounce-it";
 
 import { WorkerAPI } from "../lib/workerAPI";
 import { useTerminalContext } from "./terminalContext";
 import type { editor } from "monaco-editor";
-import { useEditorContext } from "./editorcontext";
+import { useEditorContext } from "./editorContext";
 
 type OnRunningChange = (isRunning: boolean) => void;
 
@@ -40,7 +39,6 @@ export default function RunProvider({
   const runningChangeListeners = useRef<OnRunningChange[]>([]);
   const [isRunning, setIsRunning] = useState(false);
   const [rootHtml, setRootHtml] = useState<string | null>(null);
-
 
   const { addInputListener, write } = useTerminalContext();
   const { addChangeFileListener, mark, monaco } = useEditorContext();
