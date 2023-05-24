@@ -1,13 +1,17 @@
 "use client";
 
 import { editor } from "monaco-editor";
-import { use, useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
-import MonacoEditor, { 
-  useMonaco, 
-} from "@monaco-editor/react";
+const MonacoEditor = dynamic(() => import("@monaco-editor/react"), {
+  ssr: false,
+});
 
-import Terminal from "./Terminal"; 
+const Terminal = dynamic(() => import("../components/Terminal"), {
+  ssr: false,
+});
+import { useMonaco } from "@monaco-editor/react";
+
 import { useEditorContext } from "@/context/editorContext";
 import { useRunContext } from "@/context/runContext";
 import { useStorageContext } from "@/context/storageContext";
@@ -25,6 +29,7 @@ import {
 
 import debounce from "just-debounce-it";
 import { useMedia } from "react-use";
+import dynamic from "next/dynamic";
 const defaultValue = `#include <stdio.h>
 
 int main() {
@@ -141,7 +146,7 @@ const EditorComponent = () => {
                   <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
                     <AlertDialogAction
-                    className="bg-red-500 hover:bg-red-600"
+                      className="bg-red-500 hover:bg-red-600"
                       onClick={() => {
                         editorRef.current?.setValue(defaultValue);
                       }}

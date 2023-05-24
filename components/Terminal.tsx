@@ -17,8 +17,8 @@ export interface _Terminal extends xterm.Terminal {
   };
 }
 
-const fitAddon = new FitAddon();
 const webgl = new WebglAddon();
+const fitAddon = new FitAddon();
 
 export default function Terminal() {
   const termDivRef = React.useRef<HTMLDivElement>(null);
@@ -105,7 +105,7 @@ export default function Terminal() {
       termRef.current.open(termDivRef.current);
 
       window.addEventListener("resize", () => {
-        fitAddon.fit();
+        fitAddon?.fit();
       });
     }
   };
