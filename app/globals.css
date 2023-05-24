@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.xterm {
+  padding: 16px !important;
+  @apply rounded-l-[12px] shadow border border-r-0 overflow-hidden;
+} 
+
+.xterm-viewport.xterm-viewport {
+  scrollbar-width: thin;
+}
+.xterm-viewport::-webkit-scrollbar {
+  width: 10px;
+}
+.xterm-viewport::-webkit-scrollbar-track {
+  opacity: 0;
+}
+.xterm-viewport::-webkit-scrollbar-thumb {
+  min-height: 20px;
+  background-color: #ffffff20;
+}
+
+body{
+  @apply text-gray-12 bg-gray-1;
+}
+
+*{
+  @apply border-gray-5;
+}

@@ -1,0 +1,5 @@
+.wasm filter=lfs diff=lfs merge=lfs -text
+public/memfs filter=lfs diff=lfs merge=lfs -text
+lib/resources/cppcheck.wasm filter=lfs diff=lfs merge=lfs -text
+public/clang filter=lfs diff=lfs merge=lfs -text
+public/lld filter=lfs diff=lfs merge=lfs -text
