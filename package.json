@@ -6,8 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "postinstall": "monaco-treemending"
+    "lint": "next lint"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.5.1",
