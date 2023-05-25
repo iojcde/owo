@@ -44,10 +44,10 @@ async function onAnyMessage(event: MessageEvent) {
       api = new API({
         ...apiOptions,
         sharedMem,
-        memfs: "/memfs",
-        clang: "/clang",
-        lld: "/lld",
-        sysroot: "/sysroot.tar",
+        memfs: "memfs.wasm",
+        clang: "clang.wasm",
+        lld: "lld.wasm",
+        sysroot: "sysroot.tar",
       });
 
       break;
