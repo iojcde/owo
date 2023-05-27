@@ -3,10 +3,13 @@ import { App } from "./app";
 import { MemFS } from "./memfs";
 import { Tar, TarPairType } from "./tar";
 import { ClangParser } from "./clangparser";
+import { resolve } from "path";
 
 export interface APIOptions {
   readBuffer: (filename: string | URL) => Promise<ArrayBuffer>;
-  compileStreaming: (filename: string | URL) => Promise<WebAssembly.Module>;
+  compileStreaming: (
+    filename: string | URL, 
+  ) => Promise<WebAssembly.Module>;
   hostWrite: (str: string) => void;
   hostReadLine: () => void;
   clang: string;
@@ -34,9 +37,11 @@ export interface RunAnalysisOptions {
 }
 
 export class API {
-  moduleCache: { [key: string]: WebAssembly.Module };
+  moduleCache: { [key: string]: Promise<WebAssembly.Module> };
   readBuffer: (filename: string | URL) => Promise<ArrayBuffer>;
-  compileStreaming: (filename: string | URL) => Promise<WebAssembly.Module>;
+  compileStreaming: (
+    filename: string | URL,
+  ) => Promise<WebAssembly.Module>;
   hostWrite: (str: string) => void;
   hostRead: () => void;
   clangFilename: string;
@@ -129,13 +134,14 @@ export class API {
     return result;
   }
 
-  async getModule(name: string) {
-    if (this.moduleCache[name]) return this.moduleCache[name];
-    const mod = await this.hostLogAsync(
-      `\x1b[38;5;248mFetching and compiling ${name}`,
-      this.compileStreaming(name)
-    );
-    this.moduleCache[name] = mod;
+  async getModule(name: string) {  
+    if (name in this.moduleCache) return this.moduleCache[name]; 
+    const mod = new Promise<WebAssembly.Module>(async(resolve, reject) => { 
+      resolve(this.hostLogAsync(
+        `\x1b[38;5;248mFetching and compiling ${name}`,
+      this.compileStreaming(name))
+    );})
+    this.moduleCache[name] =  mod;
     return mod;
   }
 
@@ -173,7 +179,7 @@ export class API {
 
     const clang = await this.getModule(this.clangFilename);
     await this.run(
-     {module: clang, gray:true},
+      { module: clang, gray: true },
       "clang",
       "-cc1",
       "-Wall",
@@ -200,10 +206,10 @@ export class API {
     await this.ready;
     const lld = await this.getModule(this.lldFilename);
     return await this.run(
-     {
-      module: lld,
-      shouldWriteStdout: false,
-     },
+      {
+        module: lld,
+        shouldWriteStdout: false,
+      },
 
       "wasm-ld",
       "--no-threads",
@@ -273,7 +279,7 @@ export class API {
       WebAssembly.compile(buffer)
     );
 
-    return await this.run({module:testMod,gray:false}, wasm);
+    return await this.run({ module: testMod, gray: false }, wasm);
   }
 
   async runAnalysis(options: RunAnalysisOptions) {
@@ -290,7 +296,7 @@ export class API {
     });
 
     await this.run(
-      {module:clang,shouldWriteStdout:false}, 
+      { module: clang, shouldWriteStdout: false },
       "clang",
       "-cc1",
       "-fsyntax-only",

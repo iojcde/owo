@@ -24,8 +24,7 @@ export class WorkerAPI {
     this.port = channel.port1;
     this.port.onmessage = this.onmessage.bind(this);
 
-    const remotePort = channel.port2;
-
+    const remotePort = channel.port2; 
     this.worker.postMessage(
       {
         id: "constructor",
@@ -52,7 +51,8 @@ export class WorkerAPI {
   terminate() {
     // before terminating we need to resolve any pending promises
     for (const [responseId, { reject }] of this.responseCBs) {
-      reject(new Error(`Response ${responseId} Worker forcefully terminated`));
+      reject();
+      console.error( `Response ${responseId} Worker forcefully terminated`)
     }
     this.responseCBs.clear();
 

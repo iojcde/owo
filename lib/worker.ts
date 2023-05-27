@@ -18,10 +18,10 @@ const apiOptions = {
   async compileStreaming(filename: string | URL) {
     // TODO: make compileStreaming work. It needs the server to use the
     // application/wasm mimetype.
-    if (false && WebAssembly.compileStreaming) {
+    if (WebAssembly.compileStreaming) {
       return WebAssembly.compileStreaming(fetch(filename));
     } else {
-      const response = await fetch(filename);
+      const response = await fetch(filename); 
       return WebAssembly.compile(await response.arrayBuffer());
     }
   },

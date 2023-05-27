@@ -30,6 +30,17 @@ import {
 import debounce from "just-debounce-it";
 import { useMedia } from "react-use";
 import dynamic from "next/dynamic";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuItem,
+} from "./ui/dropdown-menu";
+import { Dialog, DialogTrigger } from "./ui/dialog";
+import { ScrollArea } from "./ui/scroll-area";
+import { RevisionSelect } from "./RevisionSelect";
 const defaultValue = `#include <stdio.h>
 
 int main() {
@@ -43,7 +54,7 @@ const EditorComponent = () => {
   const editorRef = useRef<editor.IStandaloneCodeEditor>();
   const monaco =
     useMonaco() as typeof import("monaco-editor/esm/vs/editor/editor.api");
-  const isDark = useMedia("(prefers-color-scheme: dark)");
+  const isDark = useMedia("(prefers-color-scheme: dark)", true);
 
   function handleEditorMount(editor: editor.IStandaloneCodeEditor) {
     editorRef.current = editor;
@@ -117,7 +128,7 @@ const EditorComponent = () => {
         <div className=" border-b">
           <div className="flex max-w-screen-xl mx-auto w-full items-center gap-4 p-1.5 px-6 justify-between">
             <div className="flex items-center gap-4">
-              <h1 className="text-sm font-bold">owo</h1>
+              <h1 className="font-bold">owo</h1>
               <button
                 className="rounded text-sm bg-gray-4 hover:bg-gradient-to-br text-gray-12 from-gray-6 to-gray-4 hover:shadow transition font-medium px-4 py-1 border"
                 onClick={() => {
@@ -127,40 +138,13 @@ const EditorComponent = () => {
                 Run
               </button>
             </div>
-
             <div className="flex items-center gap-4">
-              <AlertDialog>
-                <AlertDialogTrigger className="text-sm text-gray-10 hover:text-red-500">
-                  Reset
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      Are you absolutely sure?
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This will clear your current editor content and replace it
-                      with default template code.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction
-                      className="bg-red-500 hover:bg-red-600"
-                      onClick={() => {
-                        editorRef.current?.setValue(defaultValue);
-                      }}
-                    >
-                      Continue
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
               <div
                 className={`${saved ? "text-gray-10" : "text-gray-12"} text-sm`}
               >
                 {saved ? "Saved" : "Unsaved changes"}
               </div>
+
               <button
                 className="rounded text-sm bg-gray-4 hover:bg-gradient-to-br text-gray-12 from-gray-6 to-gray-4 hover:shadow transition font-medium px-4 py-1 border"
                 onClick={() => {
@@ -170,6 +154,48 @@ const EditorComponent = () => {
               >
                 Save
               </button>
+              <Dialog>
+                <AlertDialog>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger className="text-sm outline-none">
+                      Menu ▾
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DialogTrigger className="w-full">
+                        <DropdownMenuItem>Revisions</DropdownMenuItem>
+                      </DialogTrigger>
+                      <AlertDialogTrigger className="text-sm group w-full">
+                        <DropdownMenuItem className="group-hover:text-red-500">
+                          Reset
+                        </DropdownMenuItem>
+                      </AlertDialogTrigger>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Are you absolutely sure?
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This will clear your current editor content and replace
+                        it with default template code.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction
+                        className="bg-red-500 hover:bg-red-600"
+                        onClick={() => {
+                          editorRef.current?.setValue(defaultValue);
+                        }}
+                      >
+                        Continue
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+                <RevisionSelect revisions={getRevisions()} />
+              </Dialog>
             </div>
           </div>
         </div>
@@ -189,6 +215,7 @@ const EditorComponent = () => {
               cursorSmoothCaretAnimation: "on",
               automaticLayout: true,
             }}
+            theme={isDark ? "vs-dark" : "vs-light"}
             onChange={onChange}
           />
           <Terminal />
