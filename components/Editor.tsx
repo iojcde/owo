@@ -194,7 +194,7 @@ const EditorComponent = () => {
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
-                <RevisionSelect revisions={getRevisions()} />
+                <RevisionSelect  />
               </Dialog>
             </div>
           </div>

@@ -43,13 +43,12 @@ const RevisionItem: React.FC<{
   );
 };
 
-export const RevisionSelect: React.FC<{
-  revisions: string[];
-  revision: string;
-}> = ({ revision, revisions }) => {
+export const RevisionSelect: React.FC = () => {
   const editorRef = useRef<editor.IStandaloneCodeEditor>();
   const isDark = useMedia("(prefers-color-scheme: dark)", true);
-  const { getRevision } = useStorageContext();
+  const { getRevision, getRevisions } = useStorageContext();
+
+  const revisions = getRevisions();
   return (
     <DialogContent className="w-full sm:max-w-4xl xl:max-w-5xl">
       <DialogHeader>
@@ -85,7 +84,7 @@ export const RevisionSelect: React.FC<{
                 automaticLayout: true,
                 minimap: { enabled: false },
               }}
-              defaultValue={getRevision(revision)}
+              defaultValue={getRevision(revisions[0])}
               theme={isDark ? "vs-dark" : "vs-light"}
               language="cpp"
             />
