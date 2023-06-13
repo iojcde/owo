@@ -38,7 +38,7 @@ export default function Terminal() {
       convertEol: true,
       disableStdin: false,
       cursorBlink: true,
-      fontFamily: "D2Coding Ligature",
+      fontFamily: "monospace",
       // theme: {
       //   background: "#000000",
       //   foreground: "#ffffff",
