@@ -69,6 +69,7 @@ export class API {
     this.sharedMem = options.sharedMem;
 
     this.compileClangCommonArgs = [
+      "-x c++"
       "-disable-free",
       "-isysroot",
       "/",
