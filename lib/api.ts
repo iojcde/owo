@@ -2,14 +2,11 @@ import { SourceType, assert, msToSec } from "./utils";
 import { App } from "./app";
 import { MemFS } from "./memfs";
 import { Tar, TarPairType } from "./tar";
-import { ClangParser } from "./clangparser"; 
-
+import { ClangParser } from "./clangparser";
 
 export interface APIOptions {
   readBuffer: (filename: string | URL) => Promise<ArrayBuffer>;
-  compileStreaming: (
-    filename: string | URL, 
-  ) => Promise<WebAssembly.Module>;
+  compileStreaming: (filename: string | URL) => Promise<WebAssembly.Module>;
   hostWrite: (str: string) => void;
   hostReadLine: () => void;
   clang: string;
@@ -39,9 +36,7 @@ export interface RunAnalysisOptions {
 export class API {
   moduleCache: { [key: string]: Promise<WebAssembly.Module> };
   readBuffer: (filename: string | URL) => Promise<ArrayBuffer>;
-  compileStreaming: (
-    filename: string | URL,
-  ) => Promise<WebAssembly.Module>;
+  compileStreaming: (filename: string | URL) => Promise<WebAssembly.Module>;
   hostWrite: (str: string) => void;
   hostRead: () => void;
   clangFilename: string;
@@ -69,7 +64,6 @@ export class API {
     this.sharedMem = options.sharedMem;
 
     this.compileClangCommonArgs = [
-      "-x c++",
       "-disable-free",
       "-isysroot",
       "/",
@@ -84,7 +78,6 @@ export class API {
       "-fmessage-length",
       "80",
       "-fcolor-diagnostics",
-
     ];
 
     this.diagnosticsClangCommonArgs = [
@@ -136,14 +129,17 @@ export class API {
     return result;
   }
 
-  async getModule(name: string) {  
-    if (name in this.moduleCache) return this.moduleCache[name]; 
-    const mod = new Promise<WebAssembly.Module>(async(resolve, reject) => { 
-      resolve(this.hostLogAsync(
-        `\x1b[38;5;248mFetching and compiling ${name}`,
-      this.compileStreaming(name))
-    );})
-    this.moduleCache[name] =  mod;
+  async getModule(name: string) {
+    if (name in this.moduleCache) return this.moduleCache[name];
+    const mod = new Promise<WebAssembly.Module>(async (resolve, reject) => {
+      resolve(
+        this.hostLogAsync(
+          `\x1b[38;5;248mFetching and compiling ${name}`,
+          this.compileStreaming(name)
+        )
+      );
+    });
+    this.moduleCache[name] = mod;
     return mod;
   }
 
