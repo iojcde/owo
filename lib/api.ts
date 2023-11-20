@@ -2,8 +2,8 @@ import { SourceType, assert, msToSec } from "./utils";
 import { App } from "./app";
 import { MemFS } from "./memfs";
 import { Tar, TarPairType } from "./tar";
-import { ClangParser } from "./clangparser";
-import { resolve } from "path";
+import { ClangParser } from "./clangparser"; 
+
 
 export interface APIOptions {
   readBuffer: (filename: string | URL) => Promise<ArrayBuffer>;
@@ -83,6 +83,7 @@ export class API {
       "-fmessage-length",
       "80",
       "-fcolor-diagnostics",
+      
     ];
 
     this.diagnosticsClangCommonArgs = [
