@@ -69,7 +69,7 @@ export class API {
     this.sharedMem = options.sharedMem;
 
     this.compileClangCommonArgs = [
-      "-x c++"
+      "-x c++",
       "-disable-free",
       "-isysroot",
       "/",
@@ -84,7 +84,7 @@ export class API {
       "-fmessage-length",
       "80",
       "-fcolor-diagnostics",
-      
+
     ];
 
     this.diagnosticsClangCommonArgs = [
